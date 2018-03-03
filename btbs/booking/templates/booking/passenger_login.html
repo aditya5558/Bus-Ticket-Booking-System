@@ -1,0 +1,75 @@
+{% extends 'booking/index.html' %}
+
+
+
+{% block nav %}
+<div class="row">
+				<div class="col-sm-4 col-xs-12">
+					<div id="gtco-logo"><a href="/booking">Travel-go<em></em></a></div>
+				</div>
+				<div class="col-xs-8 text-right menu-1">
+					<ul>
+						<!-- <li><a href="destination.html">Destination</a></li>
+						<li class="has-dropdown">
+							<a href="#">Travel</a>
+							<ul class="dropdown">
+								<li><a href="#">Europe</a></li>
+								<li><a href="#">Asia</a></li>
+								<li><a href="#">America</a></li>
+								<li><a href="#">Canada</a></li>
+							</ul>
+						</li> -->
+						<li><a href="/booking">Home</a></li>
+					<!-- 	<li><a href="/booking/register/">Register</a></li> -->
+					</ul>	
+				</div>
+				</div>
+{% endblock %}
+
+{% block k %}
+<div class="col-md-4 col-md-push-1 animate-box" data-animate-effect="fadeInRight">
+<div class="form-wrap">
+<div class="tab">
+<div class="tab-content">
+<div class="tab-content-inner active" data-content="signup">
+	<h3>Login</h3>{% if error_message %}
+<span style="color: red; font-weight: bold;">{{ error_message }}</span><br/>
+{% endif %}
+												<form id="login-form" method="POST">
+													{% csrf_token %} 
+													<div class="row form-group">
+														<div class="col-md-12">
+															<label for="fullname" >UserName</label>
+															<input type="text" id="fullname" class="form-control" name= "username">
+														</div>
+													</div>
+													<div class="row form-group">
+														<div class="col-md-12">
+															<label for="fullname">Password</label>
+															<input type="password" id="fullname" class="form-control" name= "password">
+														</div>
+													</div>
+													
+													<div class="row form-group">
+														<div class="col-md-12">
+															<a href="/booking/register/">New User? Register here!</a>
+															
+														</div>
+													</div>
+													
+													<div class="row form-group">
+														<div class="col-md-12">
+															<input type="submit" class="btn btn-primary btn-block" value="Submit">
+														</div>
+													</div>
+												</form>	
+										</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+{% endblock%}
+
+{% block body %}	
+{% endblock %}
