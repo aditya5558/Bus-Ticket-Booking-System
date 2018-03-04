@@ -1,0 +1,132 @@
+{% extends 'booking/index.html' %}
+
+
+
+{% block nav %}
+<div class="row">
+				<div class="col-sm-4 col-xs-12">
+					<div id="gtco-logo"><a href="/booking">Travel-go<em></em></a></div>
+				</div>
+				<div class="col-xs-8 text-right menu-1">
+					<ul>
+						<!-- <li><a href="destination.html">Destination</a></li>
+						<li class="has-dropdown">
+							<a href="#">Travel</a>
+							<ul class="dropdown">
+								<li><a href="#">Europe</a></li>
+								<li><a href="#">Asia</a></li>
+								<li><a href="#">America</a></li>
+								<li><a href="#">Canada</a></li>
+							</ul>
+						</li> -->
+						<li><a href="/booking/passenger/">Back</a></li> 
+						<li><a href="/booking">Logout</a></li>
+						
+					</ul>	
+				</div>
+				</div>
+
+{% endblock %}
+
+{% block h %}
+<h1>Welcome {{user.username}} !!!</h1>
+{% endblock %}
+
+{% block k %}
+<div class="col-md-4 col-md-push-1 animate-box" data-animate-effect="fadeInRight">
+<div class="form-wrap">
+<div class="tab">
+<div class="tab-content">
+<div class="tab-content-inner active" data-content="signup">
+	<h3>Select Bus</h3>{% if p %}
+<span style="color: red; font-weight: bold;">{{ p }}</span><br/>
+{% endif %}
+												<form id="action-form" method="POST">
+													{% csrf_token %} 
+													<div class="row form-group">
+														<input type="hidden" name="username" value="{{ user.username }}"/>
+
+														<input type="hidden" name="balance" value="{{ balance }}"/>
+														
+														<input type="hidden" name="source" value="{{ balance }}"/>
+														
+														<input type="hidden" name="destination" value="{{ balance }}"/>
+													
+														<input type="hidden" name="date" value="{{ balance }}"/>
+													</div>
+
+<!-- 				
+													<div class="row form-group">
+														<div class="col-md-12">
+															<label for="fullname">Money</label>
+															<select name="money" class="form-control">
+															<option value="50">50</option>
+															<option value="100">100</option>
+															<option value="500">500</option>
+															<option value="1000">1000</option>
+														</select>
+														</div>
+													</div> -->
+													
+													<div class="row form-group">
+														<div class="col-md-12">
+															<label for="fullname"><h4>Source:</h4></label>
+															{{source}}
+														</div>
+													</div>
+
+													<div class="row form-group">
+														<div class="col-md-12">
+															<label for="fullname" ><h4>Destination:</h4></label>
+															{{destination}}
+														</div>
+													</div>
+
+													<div class="row form-group">
+													<div class="col-md-12">
+														<label for="date-start"><h4>Date of Travel:</h4></label>
+														{{date}}
+													</div>
+													</div>
+
+													<div class="row form-group">
+														<div class="col-md-12">
+															<label for="date-start">Buses</label>
+															<select name="choice" class="form-control">
+														{% for bus in all_buses %}
+															<option value="{{bus.bus_type}}-{{bus.bus_op}}">{{bus.bus_type}}-{{bus.bus_op.username}}</option>
+														{% endfor %}
+														</select>
+														</div>
+													</div>
+
+													<div class="row form-group">
+														<div class="col-md-12">
+															<label for="date-start">Number of Seats</label>
+															<select name="num_seats" class="form-control">
+													
+															<option value="1">1</option>
+															<option value="2">2</option>
+															<option value="3">3</option>
+															<option value="4">4</option>
+															<option value="5">5</option>
+														</select>
+														</div>
+													</div>
+
+													<div class="row form-group">
+														<div class="col-md-12">
+															<input type="submit" class="btn btn-primary btn-block" value="Select">
+														</div>
+													</div>
+												</form>	
+										</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+{% endblock%}
+
+{% block body %}	
+{% endblock %}

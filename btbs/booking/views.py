@@ -116,12 +116,14 @@ def bus_operator_home(request):
 			print "ch"
 			return redirect('/booking/add_bus/')
 		elif action == 'Remove Bus':
-			all_buses = list(Bus.objects.filter(bus_op=user))
-			# print all_buses
-			# for bus in all_buses:
-			# 	print bus.bus_type,bus.source,bus.destination
-			# return redirect('/booking/remove_bus/?all_buses=%s' % all_buses)
-			return render(request,'booking/remove_bus.html',{'all_buses':all_buses})
+			all_buses = Bus.objects.filter(bus_op=user).values()
+			print all_buses
+			bus_list = []
+			for bus in all_buses:
+				print bus['bus_type'],bus['source'],bus['destination']
+				bus_list.append([bus['bus_type'],bus['source'],bus['destination']])
+			return redirect('/booking/remove_bus/?all_buses=%s' % bus_list)
+			#return render(request,'booking/remove_bus.html',{'all_buses':all_buses})
 		else:
 			return render(request,'booking/bus_operator.html', {})
 
@@ -170,8 +172,8 @@ def remove_bus(request):
 		return redirect('/booking/bus_operator/?p=%s' % message)
 
 	else:
-		for bus in request.GET['all_buses']:
-				print bus
+		# for bus in request.GET['bus_list']:
+		# 	print bus[0]
 		return render(request,'booking/remove_bus.html', {})
 
 @login_required
@@ -216,3 +218,61 @@ def add_money(request):
 
 	else:
 		return render(request,'booking/wallet.html', {})
+
+@login_required
+def book_ticket(request):
+
+	if request.method == 'POST':
+		
+		username = request.POST['username']
+		user = User.objects.get(username=username)
+		source = request.POST['source']
+		destination = request.POST['destination']
+		date = request.POST['date']
+
+		buses = Bus.objects.filter(source=source,destination=destination)
+		print buses
+		w = Wallet.objects.get(user=user)
+		money = w.balance
+
+		if not buses:
+			p = "Sorry! No buses available"
+			return render(request,'booking/book_ticket.html', {'p':p})
+
+		return render(request,'booking/book_ticket_1.html', {'all_buses':buses,'date':date,'source':source,'destination':destination,'balance':money})
+
+	else:
+		return render(request,'booking/book_ticket.html', {})
+
+@login_required
+def book_ticket_1(request):
+
+	if request.method == 'POST':
+		
+		username = request.POST['username']
+		balance = request.POST['balance']
+		source = request.POST['source']
+		destination = request.POST['destination']
+		date = request.POST['date']
+		user = User.objects.get(username=username)
+		selection = request.POST['choice']
+		num_seats = request.POST['num_seats']
+		lis = selection.split("-")
+		m = Bus.objects.get(bus_type=lis[0],bus_op=lis[1])
+
+		w = Wallet.objects.get(user=user)
+		total_price = m.price*num_seats
+
+		if m:
+			if w.balance >= total_price: 
+
+				obj = Booking.objects.create(user=user,bus=m,wallet_initial=w.balance,wallet_final=w.balance-total_price,total_price=total_price,timestamp=datetime.datetime.now(),num_tickets=num_seats,status='Success')
+				message = 'Booking Success!!!'
+				print message
+				return redirect('/booking/bus_operator/?p=%s' % message)
+			else:
+				redirect('/booking/add_money/')
+		return render(request,'booking/book_ticket_1.html', {'date':date,'source':source,'destination':destination,'balance':money})
+
+	else:
+		return render(request,'booking/book_ticket_1.html', {})

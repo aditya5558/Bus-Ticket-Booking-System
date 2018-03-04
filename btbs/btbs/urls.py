@@ -22,5 +22,5 @@ urlpatterns = [
     # url(r'^login/$', auth_views.login, {'template_name': 'booking/index.html' }, name='login'),
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^booking/', include('booking.urls')),
+    url(r'^booking/', include('booking.urls',namespace='booking'))
 ]
