@@ -13,4 +13,7 @@ urlpatterns = [
     url(r'^wallet/$', views.add_money, name='wallet_home'),
     url(r'^book_ticket/$', views.book_ticket, name='book_ticket'),
     url(r'^book_ticket_1/$', views.book_ticket_1, name='book_ticket_1'),
+    url(r'^view_trips/$', views.view_trips, name='view_trips'),
+    url(r'^feedback/$', views.feedback, name='feedback'),
+
 ]

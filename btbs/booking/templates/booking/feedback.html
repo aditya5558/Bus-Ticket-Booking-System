@@ -19,20 +19,19 @@
 								<li><a href="#">Canada</a></li>
 							</ul>
 						</li> -->
+						<li><a href="/booking/passenger/">Back</a></li> 
 						<li><a href="/booking">Logout</a></li>
-					<!-- 	<li><a href="/booking/register/">Register</a></li> -->
+						
 					</ul>	
 				</div>
 				</div>
 
 {% endblock %}
 
-{% block h1 %}
-{% endblock %}
-
 {% block h %}
 <h1>Welcome {{user.username}} !!!</h1>
 {% endblock %}
+
 
 {% block k %}
 <div class="col-md-4 col-md-push-1 animate-box" data-animate-effect="fadeInRight">
@@ -40,41 +39,56 @@
 <div class="tab">
 <div class="tab-content">
 <div class="tab-content-inner active" data-content="signup">
-	<h3>Choose an Action</h3>{% if request.GET.p %}
-<span style="color: blue; font-weight: bold;">{{ request.GET.p }}</span><br/>
+	<h3>Feedback</h3>{% if p %}
+<span style="color: blue; font-weight: bold;">{{ p }}</span><br/>
 {% endif %}
 												<form id="action-form" method="POST">
 													{% csrf_token %} 
 													<div class="row form-group">
 														<input type="hidden" name="username" value="{{ user.username }}"/>
-
-														<div class="col-md-12">
-															<input type="submit" class="btn btn-primary btn-block" name="choice" value="Book Ticket" required="required" id="switch_4_1"/>
-														</div>
 													</div>
+
 													<div class="row form-group">
-														<div class="col-md-12">
-															<input type="submit" class="btn btn-primary btn-block" name="choice" value="View Previous Trips" required="required" id="switch_4_1"/>
-														</div>
+														<input type="hidden" name="bookings" value="{{ bookings }}"/>
 													</div>
 
 													<div class="row form-group">
 														<div class="col-md-12">
-															<input type="submit" class="btn btn-primary btn-block" name="choice" value="Add Money to Wallet" required="required" id="switch_4_1"/>
+															<label for="fullname">Trip</label>
+															<select name="choice" class="form-control">
+															
+															{% for b in bookings %}
+															<option id="{{ b.booking_id }}" value="{{ b.booking_id }}">{{b.booking_id}}</option>
+															{% endfor %}
+														</select>
+														</div>
+													</div>
+														
+													<div class="row form-group">
+														<div class="col-md-12">
+															<label for="fullname" >Enter Comments</label>
+															<input type="textarea" id="fullname" class="form-control" name= "feedback">
 														</div>
 													</div>
 
 													<div class="row form-group">
 														<div class="col-md-12">
-															<input type="submit" class="btn btn-primary btn-block" name="choice" value="Give Feedback" required="required" id="switch_4_1"/>
+															<label for="fullname">Rating</label>
+															<select name="rating" class="form-control">
+															<option value="1">1</option>
+															<option value="2">2</option>
+															<option value="3">3</option>
+															<option value="4">4</option>
+															<option value="5">5</option>
+														</select>
 														</div>
 													</div>
 													
-												<!-- 	<div class="row form-group">
+													<div class="row form-group">
 														<div class="col-md-12">
-															<input type="submit" class="btn btn-primary btn-block" value="Register">
+															<input type="submit" class="btn btn-primary btn-block" value="Submit">
 														</div>
-													</div> -->
+													</div>
 												</form>	
 										</div>
 										</div>

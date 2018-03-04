@@ -6,6 +6,9 @@ from django.shortcuts import render, HttpResponse, redirect
 from .forms import UserForm
 from .models import User,UserFeedback,Wallet,WalletTransaction,Bus,Booking
 import datetime
+import ast
+
+
 # Create your views here.
 def index(request):
 	logout(request)
@@ -209,10 +212,14 @@ def add_money(request):
 		money = request.POST['money']
 
 		w = Wallet.objects.get(user=user)
+		old = w.balance
 		w.balance = w.balance + float(money)
 		w.updated_at = datetime.datetime.now()
 		w.save()
-		print w
+
+		wt = WalletTransaction.objects.create(wallet=w,type='credit',old_balance=old,new_balance=w.balance,trans_amt=float(money),timestamp=datetime.datetime.now())
+		print wt
+		# print w
 		p = 'Money Added'
 		return render(request,'booking/wallet.html', {'p':p})
 
@@ -276,3 +283,54 @@ def book_ticket_1(request):
 
 	else:
 		return render(request,'booking/book_ticket_1.html', {})
+
+@login_required
+def view_trips(request):
+
+
+	user = request.user
+	print user.username
+		
+	bookings = Booking.objects.filter(user=user)
+
+	return render(request,'booking/view_trips.html', {'bookings':bookings})
+
+@login_required
+def feedback(request):
+
+	if request.method == 'POST':
+		
+		username = request.POST['username']
+		user = User.objects.get(username=username)
+		choice = request.POST['choice']
+		comment = request.POST['feedback']
+		rating = request.POST['rating']
+		# bookings = request.POST['bookings']
+		print choice
+
+		c = Booking.objects.get(booking_id=choice)
+		print c
+		
+		# c = ast.literal_eval([choice])
+		# print c[0]
+
+		# c = choice.encode('utf-8')
+		# print type(c)
+		
+		f = UserFeedback.objects.create(user=user,booking=c,comment=comment,rating=rating)
+		print f
+		
+		
+		message = 'Thank You for your Feedback!!!'
+		print message
+
+		return redirect('/booking/passenger/?p=%s' % message)
+		# return render(request,'booking/feedback.html', {})
+
+	else:
+		user = request.user
+		# print user.username
+			
+		bookings = Booking.objects.filter(user=user)
+
+		return render(request,'booking/feedback.html', {'bookings':bookings})

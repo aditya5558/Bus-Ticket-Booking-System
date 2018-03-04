@@ -11,14 +11,6 @@ class User(AbstractUser):
         return("Username : " + self.username + " Passenger : " + str(self.is_passenger) + " Bus Operator  : " + str(self.is_bus_operator))
 
 
-class UserFeedback(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-    subject = models.CharField(max_length=300,blank=False)
-    comment = models.TextField(blank=True)
-    rating = models.IntegerField(blank=True,choices=(('1','1'),('2','2'),('3','3'),('4','4'),('5','5')))
-
-    def __str__(self):
-        return("Username : " + self.user.username + " Rating : " + str(self.rating))
 
 class Wallet(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
@@ -71,6 +63,13 @@ class Booking(models.Model):
         return("Booking ID : " + str(self.booking_id) + " Total Price : " + str(self.total_price) + " Status : " + str(self.status))
 
 
+class UserFeedback(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    booking = models.ForeignKey(Booking,on_delete=models.CASCADE,null=True)
+    comment = models.TextField(blank=True)
+    rating = models.IntegerField(blank=True,choices=(('1','1'),('2','2'),('3','3'),('4','4'),('5','5')))
 
+    def __str__(self):
+        return("Username : " + self.user.username + " Rating : " + str(self.rating))
 
 
