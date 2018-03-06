@@ -37,21 +37,26 @@
 <div class="tab">
 <div class="tab-content">
 <div class="tab-content-inner active" data-content="signup">
-	<h3>Choose an Action</h3>{% if request.GET.p %}
+		<center><h3>Dashboard</h3></center>{% if request.GET.p %}
 <span style="color: blue; font-weight: bold;">{{ request.GET.p }}</span><br/>
 {% endif %}
-												<form id="action-form" method="POST">
+												<!-- <form id="action-form" method="POST"> -->
 													{% csrf_token %} 
 													<div class="row form-group">
 														<input type="hidden" name="username" value="{{ user.username }}"/>
 
-														<div class="col-md-12">
+														<!-- <div class="col-md-12">
 															<input type="submit" class="btn btn-primary btn-block" name="choice" value="Add Bus" required="required" id="switch_4_1"/>
+														</div> -->
+														<div class="col-md-12">
+															<!-- <input type="submit" class="btn btn-primary btn-block" name="choice" value="Remove Bus" required="required" id="switch_4_1"/> -->
+															<a href='/booking/add_bus'><button class="btn btn-primary btn-block">Add Bus</button></a>
 														</div>
 													</div>
 													<div class="row form-group">
 														<div class="col-md-12">
-															<input type="submit" class="btn btn-primary btn-block" name="choice" value="Remove Bus" required="required" id="switch_4_1"/>
+															<!-- <input type="submit" class="btn btn-primary btn-block" name="choice" value="Remove Bus" required="required" id="switch_4_1"/> -->
+															<a href='/booking/remove_bus'><button class="btn btn-primary btn-block">Remove Bus</button></a>
 														</div>
 													</div>
 

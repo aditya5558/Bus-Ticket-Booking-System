@@ -34,7 +34,7 @@
 
 
 {% block k %}
-<div class="col-md-8 col-md-push-1 animate-box" data-animate-effect="fadeInRight">
+<div class="col-md-8 col-md-push-2 animate-box" data-animate-effect="fadeInRight">
 <div class="form-wrap">
 <div class="tab">
 <div class="tab-content">
@@ -48,22 +48,22 @@
 														<input type="hidden" name="username" value="{{ user.username }}"/>
 
 													<div class="row form-group">
-														<div class="col-md-18">
-															<table>
-															<!-- <tr>
-																<td colspan="10"><h4>Booking ID</h4></td>     
-																<td colspan="10"><h4>Price</h4></td>    
-																<td colspan="10"><h4>Date and Time</h4></td>
-															</tr> -->
+														<div class="col-md-10">
+															<table  style="width: 100%">
+															<tr style="border-bottom: 1px solid #ddd;">
+																<td colspan="8"><h4>Booking ID</h4></td>     
+																<td colspan="8"><h4>Price</h4></td>    
+																<td colspan="8"><h4>Date and Time</h4></td>
+															</tr>
 															{% for b in bookings%}
 															
-															<tr>
-																<td colspan="8"><b>Booking ID : </b>{{b.booking_id}}</td>
-															</tr>
-															<tr>
-																<td colspan="8"><b>Price : </b>{{b.total_price}}</td>
-															</tr>
-																<td colspan="8"><b>Date and Time : </b>{{b.timestamp}}</td>
+															<tr style="border-bottom: 1px solid #ddd;">
+																<td colspan="8">{{b.pk}}</td>
+															<!-- </tr>
+															<tr> -->
+																<td colspan="8">{{b.total_price}}</td>
+															<!-- </tr> -->
+																<td colspan="8">{{b.timestamp}}</td>
 															</tr>
 															{% endfor %}
 															</table>

@@ -36,14 +36,15 @@ class WalletTransaction(models.Model):
 
 class Bus(models.Model):
     bus_op = models.ForeignKey(User,on_delete=models.CASCADE)
-    bus_type = models.CharField(max_length=10,choices=(('AC','AC'),('Non-AC','Non-AC')))
-    # date = models.DateField(blank=True)
+    bus_type = models.CharField(max_length=10,choices=(('AC','AC'),('Non AC','Non AC')))
+    date = models.DateField(null=True,blank=True)
     time = models.TimeField(blank=True)
     source = models.CharField(max_length=30,blank=True)
     destination = models.CharField(max_length=30,blank=True)
     journey_duration = models.TimeField(blank=True)
     rating = models.IntegerField(null=True,blank=True,choices=(('1','1'),('2','2'),('3','3'),('4','4'),('5','5')))
     price = models.FloatField(blank=False)
+    num_seats = models.IntegerField(null=True)
 
     def __str__(self):
         return("Bus Operator : " + str(self.bus_op.username) + " Type : " + str(self.bus_type) + " Price : " + str(self.price))
@@ -54,13 +55,13 @@ class Booking(models.Model):
     wallet_initial = models.FloatField(blank=False)
     wallet_final = models.FloatField(blank=False)
     total_price = models.FloatField(blank=False)
-    booking_id = models.CharField(unique=True,max_length=10,validators=[MaxLengthValidator(10),MinLengthValidator(10)])
+    #booking_id = models.CharField(unique=True,max_length=10,validators=[MaxLengthValidator(10),MinLengthValidator(10)])
     timestamp = models.DateTimeField(auto_now_add=True)
     num_tickets = models.IntegerField(blank=False)
     status = models.CharField(max_length=10,choices=(('Success','Success'),('Failed','Failed')))
 
     def __str__(self):
-        return("Booking ID : " + str(self.booking_id) + " Total Price : " + str(self.total_price) + " Status : " + str(self.status))
+        return(" Total Price : " + str(self.total_price) + " Status : " + str(self.status))
 
 
 class UserFeedback(models.Model):

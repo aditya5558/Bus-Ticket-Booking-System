@@ -58,7 +58,7 @@
 															<select name="choice" class="form-control">
 															
 															{% for b in bookings %}
-															<option id="{{ b.booking_id }}" value="{{ b.booking_id }}">{{b.booking_id}}</option>
+															<option id="{{ b.pk }}" value="{{ b.pk }}">Booking ID:{{b.pk}} {{b.bus.source}}-{{b.bus.destination}} {{b.timestamp}}</option>
 															{% endfor %}
 														</select>
 														</div>

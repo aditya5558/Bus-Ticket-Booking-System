@@ -6,6 +6,8 @@ from django.shortcuts import render, HttpResponse, redirect
 from .forms import UserForm
 from .models import User,UserFeedback,Wallet,WalletTransaction,Bus,Booking
 import datetime
+from dateutil.parser import parse
+import pandas as pd
 import ast
 
 
@@ -120,13 +122,13 @@ def bus_operator_home(request):
 			return redirect('/booking/add_bus/')
 		elif action == 'Remove Bus':
 			all_buses = Bus.objects.filter(bus_op=user).values()
-			print all_buses
-			bus_list = []
-			for bus in all_buses:
-				print bus['bus_type'],bus['source'],bus['destination']
-				bus_list.append([bus['bus_type'],bus['source'],bus['destination']])
-			return redirect('/booking/remove_bus/?all_buses=%s' % bus_list)
-			#return render(request,'booking/remove_bus.html',{'all_buses':all_buses})
+			# print all_buses
+			# bus_list = []
+			# for bus in all_buses:
+			# 	print bus['bus_type'],bus['source'],bus['destination']
+			# 	bus_list.append([bus['bus_type'],bus['source'],bus['destination']])
+			#return redirect('/booking/remove_bus/?all_buses=%s' % bus_list)
+			return render(request,'booking/remove_bus.html',{'all_buses':all_buses})
 		else:
 			return render(request,'booking/bus_operator.html', {})
 
@@ -147,7 +149,25 @@ def add_bus(request):
 		price = request.POST['price']
 		time = request.POST['time']
 
-		Bus.objects.create(bus_op=user,bus_type=bus_type,price=price,source=source,destination=destination,time=time,journey_duration=journey_duration)
+		from_date = request.POST['date-from'].encode('utf-8')
+		to_date = request.POST['date-to'].encode('utf-8')
+
+		# f = datetime.strptime(from_date, '%m-%d-%Y')
+
+		# print f,to_date
+
+		daterange = pd.date_range(from_date,to_date)
+
+		if from_date <= to_date:
+			for d in daterange:
+				# date = from_date + datetime.timedelta(n)
+				Bus.objects.create(bus_op=user,date=d.strftime('%Y-%m-%d'),num_seats=50,bus_type=bus_type,price=price,source=source,destination=destination,time=time,journey_duration=journey_duration)
+		else:
+			message = 'Error! From date > To date'
+			print message
+			return redirect('/booking/add_bus/?error_message=%s' % message)
+
+		# Bus.objects.create(bus_op=user,bus_type=bus_type,price=price,source=source,destination=destination,time=time,journey_duration=journey_duration)
 		message = 'Bus Successfully Added'
 		print message
 		return redirect('/booking/bus_operator/?p=%s' % message)
@@ -164,7 +184,7 @@ def remove_bus(request):
 		
 		bus = request.POST['choice']
 		lis = bus.split("-")
-		m = Bus.objects.get(bus_type=lis[0],source=lis[1],destination=lis[2])
+		m = Bus.objects.get(bus_type=lis[0],source=lis[1],destination=lis[2],date=lis[3])
 		if m:
 			m.delete()
 			message = 'Bus Successfully removed'
@@ -177,7 +197,9 @@ def remove_bus(request):
 	else:
 		# for bus in request.GET['bus_list']:
 		# 	print bus[0]
-		return render(request,'booking/remove_bus.html', {})
+		# username = request.user
+		all_buses = Bus.objects.filter(bus_op=request.user).values()
+		return render(request,'booking/remove_bus.html', {'all_buses':all_buses})
 
 @login_required
 def passenger_home(request):
@@ -221,10 +243,11 @@ def add_money(request):
 		print wt
 		# print w
 		p = 'Money Added'
-		return render(request,'booking/wallet.html', {'p':p})
+		return render(request,'booking/wallet.html', {'p':p,'w':w})
 
 	else:
-		return render(request,'booking/wallet.html', {})
+		w = Wallet.objects.get(user=request.user)
+		return render(request,'booking/wallet.html', {'w':w})
 
 @login_required
 def book_ticket(request):
@@ -235,9 +258,12 @@ def book_ticket(request):
 		user = User.objects.get(username=username)
 		source = request.POST['source']
 		destination = request.POST['destination']
-		date = request.POST['date']
+		date = request.POST['date'].encode('utf-8')
 
-		buses = Bus.objects.filter(source=source,destination=destination)
+		daterange = pd.date_range(date,date)
+
+
+		buses = Bus.objects.filter(source=source,destination=destination,date=daterange[0].strftime('%Y-%m-%d'))
 		print buses
 		w = Wallet.objects.get(user=user)
 		money = w.balance
@@ -256,30 +282,63 @@ def book_ticket_1(request):
 
 	if request.method == 'POST':
 		
+		print request.POST
+
 		username = request.POST['username']
 		balance = request.POST['balance']
 		source = request.POST['source']
 		destination = request.POST['destination']
 		date = request.POST['date']
+		
+
 		user = User.objects.get(username=username)
+		
 		selection = request.POST['choice']
 		num_seats = request.POST['num_seats']
 		lis = selection.split("-")
-		m = Bus.objects.get(bus_type=lis[0],bus_op=lis[1])
+
+		print source,destination,date
+		
+		daterange = pd.date_range(date,date)
+		print lis[0]
+		print lis[1]
+		user_bus = User.objects.get(username=lis[1])
+		m = Bus.objects.get(bus_type=lis[0],bus_op=user_bus,source=source,destination=destination,date=daterange[0].strftime('%Y-%m-%d'))
+
+		print m.price,num_seats
 
 		w = Wallet.objects.get(user=user)
-		total_price = m.price*num_seats
+
+		total_price = m.price*int(num_seats)
 
 		if m:
-			if w.balance >= total_price: 
+			if w.balance >= total_price and m.num_seats - int(num_seats) > 0: 
 
 				obj = Booking.objects.create(user=user,bus=m,wallet_initial=w.balance,wallet_final=w.balance-total_price,total_price=total_price,timestamp=datetime.datetime.now(),num_tickets=num_seats,status='Success')
 				message = 'Booking Success!!!'
+				
+				print obj.pk
+
+				wt = WalletTransaction.objects.create(wallet=w,type='debit',old_balance=w.balance,new_balance=w.balance-total_price,trans_amt=total_price,timestamp=datetime.datetime.now())
+				m.num_seats = m.num_seats - int(num_seats)
+				w.balance = w.balance - total_price
+				w.save()
+				wt.save()
+				m.save()
+
+
 				print message
-				return redirect('/booking/bus_operator/?p=%s' % message)
-			else:
+				return redirect('/booking/passenger/?p=%s' % message)
+
+			elif w.balance < total_price:
 				redirect('/booking/add_money/')
-		return render(request,'booking/book_ticket_1.html', {'date':date,'source':source,'destination':destination,'balance':money})
+			
+			else:
+				message = "Those many seats not available"
+				print message
+				return render(request,'booking/book_ticket.html', {'p':message,'date':date,'source':source,'destination':destination,'balance':balance})
+
+		return render(request,'booking/book_ticket.html', {'date':date,'source':source,'destination':destination,'balance':balance})
 
 	else:
 		return render(request,'booking/book_ticket_1.html', {})
@@ -292,8 +351,13 @@ def view_trips(request):
 	print user.username
 		
 	bookings = Booking.objects.filter(user=user)
+	if bookings:
+		return render(request,'booking/view_trips.html', {'bookings':bookings})
+	else:
+		message = "No Previous Trips"
+		print message
+		return redirect('/booking/passenger/?p=%s' % message)
 
-	return render(request,'booking/view_trips.html', {'bookings':bookings})
 
 @login_required
 def feedback(request):
@@ -328,9 +392,17 @@ def feedback(request):
 		# return render(request,'booking/feedback.html', {})
 
 	else:
+
+
+
 		user = request.user
 		# print user.username
 			
 		bookings = Booking.objects.filter(user=user)
 
-		return render(request,'booking/feedback.html', {'bookings':bookings})
+		if bookings:
+			return render(request,'booking/feedback.html', {'bookings':bookings})
+		else:
+			message = "No Previous Trips for feedback"
+			print message
+			return redirect('/booking/passenger/?p=%s' % message)

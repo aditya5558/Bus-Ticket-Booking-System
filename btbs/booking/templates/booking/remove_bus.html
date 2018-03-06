@@ -52,8 +52,8 @@
 														<div class="col-md-12">
 
 															<select name="choice" class="form-control">
-														{% for bus in request.GET.bus_list %}
-															<option value="{{bus.bus_type}}-{{bus.source}}-{{bus.destination}}">{{bus.0}}-{{bus.source}}-{{bus.destination}}</option>
+														{% for bus in all_buses %}
+															<option value="{{bus.bus_type}}-{{bus.source}}-{{bus.destination}}-{{bus.date}}">{{bus.bus_type}}-{{bus.source}}-{{bus.destination}}-{{bus.date}}</option>
 														{% endfor %}
 														</select>
 														</div>

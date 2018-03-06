@@ -274,7 +274,12 @@
 	var dateForm = function() {
 		$('#date-start').datepicker();
 	};
-
+	
+	var dateForm1 = function() {
+		$('#date-end').datepicker();
+	};
+		
+	
 	var parallax = function() {
 		$(window).stellar({
 			horizontalScrolling: false,
@@ -298,6 +303,7 @@
 		loaderPage();
 		counterWayPoint();
 		dateForm();
+		dateForm1();
 		parallax();
 	});
 

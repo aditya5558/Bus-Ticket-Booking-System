@@ -43,18 +43,20 @@
 	<h3>Select Bus</h3>{% if p %}
 <span style="color: red; font-weight: bold;">{{ p }}</span><br/>
 {% endif %}
-												<form id="action-form" method="POST">
+												<form id="action-form" method="POST" action='/booking/book_ticket_1/'>
 													{% csrf_token %} 
 													<div class="row form-group">
 														<input type="hidden" name="username" value="{{ user.username }}"/>
 
 														<input type="hidden" name="balance" value="{{ balance }}"/>
 														
-														<input type="hidden" name="source" value="{{ balance }}"/>
+														<input type="hidden" name="source" value="{{ source }}"/>
+
+														<!-- <input type="hidden" name="b" value="{{ all_buses }}"/> -->
 														
-														<input type="hidden" name="destination" value="{{ balance }}"/>
+														<input type="hidden" name="destination" value="{{ destination }}"/>
 													
-														<input type="hidden" name="date" value="{{ balance }}"/>
+														<input type="hidden" name="date" value="{{ date }}"/>
 													</div>
 
 <!-- 				
@@ -96,7 +98,7 @@
 															<label for="date-start">Buses</label>
 															<select name="choice" class="form-control">
 														{% for bus in all_buses %}
-															<option value="{{bus.bus_type}}-{{bus.bus_op}}">{{bus.bus_type}}-{{bus.bus_op.username}}</option>
+															<option value="{{bus.bus_type}}-{{bus.bus_op}}">{{bus.bus_type}}-{{bus.bus_op.username}} ({{bus.num_seats}} seats remaining)</option>
 														{% endfor %}
 														</select>
 														</div>

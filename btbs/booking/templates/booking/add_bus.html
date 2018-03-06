@@ -40,8 +40,8 @@
 <div class="tab">
 <div class="tab-content">
 <div class="tab-content-inner active" data-content="signup">
-	<h3>Enter Bus Details</h3>{% if error_message %}
-<span style="color: red; font-weight: bold;">{{ error_message }}</span><br/>
+	<h3>Enter Bus Details</h3>{% if request.GET.error_message %}
+<span style="color: red; font-weight: bold;">{{ request.GET.error_message }}</span><br/>
 {% endif %}
 												<form id="add-bus-form" method="POST">
 													{% csrf_token %} 
@@ -53,7 +53,7 @@
 															<label for="fullname">Bus Type</label>
 															<select name="bus_type" class="form-control">
 															<option value="AC">AC</option>
-															<option value="Non-AC">Non-AC</option>
+															<option value="Non AC">Non-AC</option>
 														</select>
 														</div>
 													</div>
@@ -71,6 +71,20 @@
 															<label for="fullname">Destination</label>
 															<input type="text" id="fullname" class="form-control" name= "destination">
 														</div>
+													</div>
+
+													<div class="row form-group">
+													<div class="col-md-12">
+														<label for="date-start">From Date</label>
+														<input type="text" id="date-start" class="form-control" name="date-from">
+													</div>
+													</div>
+
+													<div class="row form-group">
+													<div class="col-md-12">
+														<label for="date-start">To Date</label>
+														<input type="text" id="date-end" class="form-control" name="date-to">
+													</div>
 													</div>
 
 													<div class="row form-group">
@@ -93,6 +107,8 @@
 															<input type="number" id="fullname" class="form-control" name= "price" required="">
 														</div>
 													</div>
+
+													
 
 													<!-- <div class="row form-group">
 													<div class="col-md-12">

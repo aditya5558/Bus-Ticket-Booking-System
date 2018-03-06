@@ -31,7 +31,7 @@
 {% endblock %}
 
 {% block h %}
-<h1>Welcome {{user.username}} !!!</h1>
+<h1>Welcome {{request.user.username}} !!!</h1>
 {% endblock %}
 
 {% block k %}
@@ -40,7 +40,7 @@
 <div class="tab">
 <div class="tab-content">
 <div class="tab-content-inner active" data-content="signup">
-	<h3>Choose an Action</h3>{% if request.GET.p %}
+	<center><h3>Dashboard</h3></center>{% if request.GET.p %}
 <span style="color: blue; font-weight: bold;">{{ request.GET.p }}</span><br/>
 {% endif %}
 												<form id="action-form" method="POST">
