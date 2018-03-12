@@ -15,5 +15,6 @@ urlpatterns = [
     url(r'^book_ticket_1/$', views.book_ticket_1, name='book_ticket_1'),
     url(r'^view_trips/$', views.view_trips, name='view_trips'),
     url(r'^feedback/$', views.feedback, name='feedback'),
+    url(r'^view_feedback/$', views.view_feedback, name='view_feedback'),
 
 ]

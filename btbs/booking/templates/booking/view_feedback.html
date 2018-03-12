@@ -19,7 +19,7 @@
 								<li><a href="#">Canada</a></li>
 							</ul>
 						</li> -->
-						<li><a href="/booking/passenger/">Passenger Home</a></li> 
+						<li><a href="/booking/bus_operator/">Back</a></li> 
 						<li><a href="/booking">Logout</a></li>
 						
 					</ul>	
@@ -29,49 +29,57 @@
 {% endblock %}
 
 {% block h %}
-<h1>Welcome {{user.username}} !!!</h1>
+<!-- <h1>Welcome {{user.username}} !!!</h1> -->
 {% endblock %}
 
 
 {% block k %}
-<div class="col-md-4 col-md-push-1 animate-box" data-animate-effect="fadeInRight">
+<div class="col-md-8 col-md-push-2 animate-box" data-animate-effect="fadeInRight">
 <div class="form-wrap">
 <div class="tab">
 <div class="tab-content">
 <div class="tab-content-inner active" data-content="signup">
-	<h3>Wallet Home</h3>{% if request.GET.p %}
-<span style="color: blue; font-weight: bold;">{{ request.GET.p }}</span><br/>
+	<h3>Feedback</h3>{% if p %}
+<span style="color: blue; font-weight: bold;">{{ p }}</span><br/>
 {% endif %}
-												<form id="action-form" method="POST">
-													{% csrf_token %} 
+												<!-- <form id="action-form" method="POST"> -->
+													<!-- {% csrf_token %}  -->
 													<div class="row form-group">
 														<input type="hidden" name="username" value="{{ user.username }}"/>
 
 													<div class="row form-group">
-														<div class="col-md-12">
-															<b>Current Balance</b> : {{w.balance}}
-														</div>
-													</div>
-
-													<div class="row form-group">
-														<div class="col-md-12">
-															<label for="fullname">Money</label>
-															<select name="money" class="form-control">
-															<option value="50">50</option>
-															<option value="100">100</option>
-															<option value="500">500</option>
-															<option value="1000">1000</option>
-														</select>
+														<div class="col-md-10">
+															<table  style="width: 100%">
+															<tr style="border-bottom: 1px solid #ddd;">
+																<td colspan="8"><h4>User</h4></td>     
+																 
+																<td colspan="8"><h4>Comment</h4></td>   
+																<td colspan="8"><h4>Rating</h4></td>
+															</tr>
+															{% for b in bookings%}
+															
+															<tr style="border-bottom: 1px solid #ddd;">
+																<td colspan="8">{{b.user.username}}</td>
+															<!-- </tr>
+															<tr> -->
+																
+																<td colspan="8">{{b.comment}}</td>
+																<td colspan="8">{{b.rating}}</td>
+															<!-- </tr> -->
+																<!-- <td colspan="8">{{b.timestamp}}</td> -->
+															</tr>
+															{% endfor %}
+															</table>
 														</div>
 													</div>
 														
 													
-													<div class="row form-group">
+													<!-- <div class="row form-group">
 														<div class="col-md-12">
 															<input type="submit" class="btn btn-primary btn-block" value="Add Money">
 														</div>
-													</div>
-												</form>	
+													</div> -->
+												<!-- </form>	 -->
 										</div>
 										</div>
 									</div>

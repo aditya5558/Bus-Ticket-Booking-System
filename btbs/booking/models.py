@@ -55,6 +55,7 @@ class Booking(models.Model):
     wallet_initial = models.FloatField(blank=False)
     wallet_final = models.FloatField(blank=False)
     total_price = models.FloatField(blank=False)
+    seat_numbers = models.CharField(max_length=30,blank=True)
     #booking_id = models.CharField(unique=True,max_length=10,validators=[MaxLengthValidator(10),MinLengthValidator(10)])
     timestamp = models.DateTimeField(auto_now_add=True)
     num_tickets = models.IntegerField(blank=False)
@@ -69,7 +70,8 @@ class UserFeedback(models.Model):
     booking = models.ForeignKey(Booking,on_delete=models.CASCADE,null=True)
     comment = models.TextField(blank=True)
     rating = models.IntegerField(blank=True,choices=(('1','1'),('2','2'),('3','3'),('4','4'),('5','5')))
-
+    
+    
     def __str__(self):
         return("Username : " + self.user.username + " Rating : " + str(self.rating))
 

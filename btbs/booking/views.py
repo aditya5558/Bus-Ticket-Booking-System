@@ -9,6 +9,7 @@ import datetime
 from dateutil.parser import parse
 import pandas as pd
 import ast
+from django.db.models import DateTimeField, ExpressionWrapper, F
 
 
 # Create your views here.
@@ -184,7 +185,11 @@ def remove_bus(request):
 		
 		bus = request.POST['choice']
 		lis = bus.split("-")
-		m = Bus.objects.get(bus_type=lis[0],source=lis[1],destination=lis[2],date=lis[3])
+		
+		daterange = pd.date_range(lis[3],lis[3])
+		print daterange
+
+		m = Bus.objects.get(bus_type=lis[0],source=lis[1],destination=lis[2],date=daterange[0].strftime('%Y-%m-%d'))
 		if m:
 			m.delete()
 			message = 'Bus Successfully removed'
@@ -222,7 +227,8 @@ def passenger_home(request):
 			return render(request,'booking/passenger.html', {})
 
 	else:
-		return render(request,'booking/passenger.html', {})
+		w = Wallet.objects.get(user=request.user)
+		return render(request,'booking/passenger.html', {'w':w})
 
 @login_required
 def add_money(request):
@@ -243,7 +249,10 @@ def add_money(request):
 		print wt
 		# print w
 		p = 'Money Added'
-		return render(request,'booking/wallet.html', {'p':p,'w':w})
+		# return render(request,'booking/wallet.html', {'p':p,'w':w})
+		
+		print p
+		return redirect('/booking/passenger/?p=%s' % p)
 
 	else:
 		w = Wallet.objects.get(user=request.user)
@@ -314,13 +323,21 @@ def book_ticket_1(request):
 		if m:
 			if w.balance >= total_price and m.num_seats - int(num_seats) > 0: 
 
-				obj = Booking.objects.create(user=user,bus=m,wallet_initial=w.balance,wallet_final=w.balance-total_price,total_price=total_price,timestamp=datetime.datetime.now(),num_tickets=num_seats,status='Success')
+				x = int(num_seats)
+				s = ''
+				while x > 0:
+					s += str(m.num_seats)
+					s += ','
+					m.num_seats -= 1
+					x -= 1
+
+				obj = Booking.objects.create(user=user,bus=m,seat_numbers=s[0:-1],wallet_initial=w.balance,wallet_final=w.balance-total_price,total_price=total_price,timestamp=datetime.datetime.now(),num_tickets=num_seats,status='Success')
 				message = 'Booking Success!!!'
 				
 				print obj.pk
 
 				wt = WalletTransaction.objects.create(wallet=w,type='debit',old_balance=w.balance,new_balance=w.balance-total_price,trans_amt=total_price,timestamp=datetime.datetime.now())
-				m.num_seats = m.num_seats - int(num_seats)
+				# m.num_seats = m.num_seats - int(num_seats)
 				w.balance = w.balance - total_price
 				w.save()
 				wt.save()
@@ -331,7 +348,9 @@ def book_ticket_1(request):
 				return redirect('/booking/passenger/?p=%s' % message)
 
 			elif w.balance < total_price:
-				redirect('/booking/add_money/')
+				message = "Not Enough Money! Please Add Money to wallet !"
+				print message
+				return redirect('/booking/wallet/?p=%s' % message)
 			
 			else:
 				message = "Those many seats not available"
@@ -372,7 +391,7 @@ def feedback(request):
 		# bookings = request.POST['bookings']
 		print choice
 
-		c = Booking.objects.get(booking_id=choice)
+		c = Booking.objects.get(pk=choice)
 		print c
 		
 		# c = ast.literal_eval([choice])
@@ -406,3 +425,25 @@ def feedback(request):
 			message = "No Previous Trips for feedback"
 			print message
 			return redirect('/booking/passenger/?p=%s' % message)
+
+@login_required
+def view_feedback(request):
+
+
+	user = request.user
+	print user.username
+		
+	feedback = UserFeedback.objects.all()
+	f1 = []
+	for f in feedback:
+		print f.booking.bus.bus_op
+		if f.booking.bus.bus_op.username == user.username:
+			f1.append(f)
+
+	# feedback = Feedback.objects.filter(booking.bus.bus_op=user)
+	if len(f1):
+		return render(request,'booking/view_feedback.html', {'bookings':f1})
+	else:
+		message = "No Feedback"
+		print message
+		return redirect('/booking/bus_operator/?p=%s' % message)

@@ -272,11 +272,11 @@
 
 
 	var dateForm = function() {
-		$('#date-start').datepicker();
+		$('#date-start').datepicker('setStartDate', new Date());
 	};
 	
 	var dateForm1 = function() {
-		$('#date-end').datepicker();
+		$('#date-end').datepicker('setStartDate', new Date());
 	};
 		
 	

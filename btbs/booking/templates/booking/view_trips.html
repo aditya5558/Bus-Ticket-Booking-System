@@ -19,7 +19,7 @@
 								<li><a href="#">Canada</a></li>
 							</ul>
 						</li> -->
-						<li><a href="/booking/passenger/">Back</a></li> 
+						<li><a href="/booking/passenger/">Passenger Home</a></li> 
 						<li><a href="/booking">Logout</a></li>
 						
 					</ul>	
@@ -52,8 +52,9 @@
 															<table  style="width: 100%">
 															<tr style="border-bottom: 1px solid #ddd;">
 																<td colspan="8"><h4>Booking ID</h4></td>     
-																<td colspan="8"><h4>Price</h4></td>    
-																<td colspan="8"><h4>Date and Time</h4></td>
+																<td colspan="8"><h4>Price</h4></td>  
+																<td colspan="8"><h4>Seat Numbers</h4></td>   
+																<td colspan="8"><h4>Date and Time of Booking</h4></td>
 															</tr>
 															{% for b in bookings%}
 															
@@ -61,7 +62,9 @@
 																<td colspan="8">{{b.pk}}</td>
 															<!-- </tr>
 															<tr> -->
+																
 																<td colspan="8">{{b.total_price}}</td>
+																<td colspan="8">{{b.seat_numbers}}</td>
 															<!-- </tr> -->
 																<td colspan="8">{{b.timestamp}}</td>
 															</tr>

@@ -19,7 +19,7 @@
 								<li><a href="#">Canada</a></li>
 							</ul>
 						</li> -->
-						<li><a href="/booking/passenger/">Back</a></li> 
+						<li><a href="/booking/passenger/">Passenger Home</a></li> 
 						<li><a href="/booking">Logout</a></li>
 						
 					</ul>	
@@ -98,7 +98,7 @@
 															<label for="date-start">Buses</label>
 															<select name="choice" class="form-control">
 														{% for bus in all_buses %}
-															<option value="{{bus.bus_type}}-{{bus.bus_op}}">{{bus.bus_type}}-{{bus.bus_op.username}} ({{bus.num_seats}} seats remaining)</option>
+															<option value="{{bus.bus_type}}-{{bus.bus_op}}">{{bus.bus_type}}-{{bus.bus_op.username}} Price:{{bus.price}} ({{bus.num_seats}} seats remaining)</option>
 														{% endfor %}
 														</select>
 														</div>
